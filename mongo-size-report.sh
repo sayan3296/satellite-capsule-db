@@ -1,8 +1,17 @@
 #!/bin/bash
 
+check_mongo_fs_size ()
+{
+
+unset SIZE FREE_SPACE
+SIZE=`du -sh /var/lib/mongodb/ | awk '{print $1}'`
+FREE_SPACE=`df -hPT /var/lib/mongodb/ | awk 'NR>1{print $4}'`
+
+}
+
 echo -e "\n--> Checking whether mongodb service is online or not."
 
-STAT=`systemctl is-active mongod`
+STAT=`systemctl is-active rh-mongodb34-mongod`
 
 if [[ $STAT == 'active' ]]
 then
@@ -60,10 +69,18 @@ for (var c in stats) { print(stats[c]['ns'] + ": " + getReadableFileSizeString(s
 " (" + getReadableFileSizeString(stats[c]['storageSize']) + ")"); }
 EOF
 
+echo -e "\n\n--> Collecting disk space consumtion by mongodb. \n"
+
+check_mongo_fs_size
+
+echo -e "  *** Present total consumed space in /var/lib/mongodb/ => $SIZE"
+echo -e "  *** Present free space in the underlying filesystem   => $FREE_SPACE"
+
+
 echo
 
 else
-   echo -e "  *** Service is not running\n"
+   echo -e "  *** The rh-mongodb34-mongod service is not running\n"
    exit 1;
 fi
 
