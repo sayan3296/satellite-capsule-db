@@ -45,12 +45,31 @@ echo ""
 echo "*************** FileSystem Usage ***************"
 echo ""
 
+if [ -d /var/lib/pgsql ]
+then
 echo "du -hs /var/lib/pgsql/*"
 du -hs /var/lib/pgsql/*
 echo
+fi
+
+if [ -d /var/lib/pgsql/data ]
+then
 echo "du -hs /var/lib/pgsql/data/*"
 du -hs /var/lib/pgsql/data/*
+fi
 
+if [ -d /var/opt/rh/rh-postgresql12/lib/pgsql ]
+then
+echo "du -hs /var/opt/rh/rh-postgresql12/lib/pgsql/*"
+du -hs /var/opt/rh/rh-postgresql12/lib/pgsql/*
+echo
+fi
+
+if [ -d /var/opt/rh/rh-postgresql12/lib/pgsql/data ]
+then
+echo "du -hs /var/opt/rh/rh-postgresql12/lib/pgsql/data/*"
+du -hs /var/opt/rh/rh-postgresql12/lib/pgsql/data/*
+fi
 
 echo -e "\n\n************** Row count from some concerned foreman tables **************\n\n"
 
@@ -77,4 +96,3 @@ do
     echo -e "$i\t $_COUNT\t $_COUNT30"
   fi
 done | column -t -o "      "
-
