@@ -30,18 +30,15 @@ then
      echo -e "\nCheck and fix the postgres service.\n"
      exit 1;
      else
-     echo -e "\n--> Vaccuming foreman database................ \n"
-     su - postgres -c "psql -d foreman -c 'vacuum full verbose analyze;'"
-     sleep 4
-     echo -e "\n--> Re-indexing foreman database.............. \n"
-     su - postgres -c "psql -d foreman -c 'reindex database foreman;'"
-     sleep 4
-     echo -e "\n--> Vaccuming candlepin database.............. \n"
-     su - postgres -c "psql -d candlepin -c 'vacuum full verbose analyze;'"
-     sleep 4
-     echo -e "\n--> Re-indexing candlepin database............ \n"
-     su - postgres -c "psql -d candlepin -c 'reindex database candlepin;'"
-     sleep 4
+     for i in foreman candlepin pulpcore
+     do
+       echo -e "\n--> Vaccuming $i database................ \n"
+       su - postgres -c "psql -d $i -c 'vacuum full verbose analyze;'"
+       sleep 4
+       echo -e "\n--> Re-indexing $i database.............. \n"
+       su - postgres -c "psql -d $i -c 'reindex database $i;'"
+       sleep 4
+     done
      fi
 
   echo -e "\n--> Restarting all satellite services.......  \n"

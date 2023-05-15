@@ -34,12 +34,15 @@ echo "************* Candlepin Tablesizes *************"
 echo ""
 echo $TABLEQUERY | su - postgres -c "psql -d candlepin"
 
-
 echo ""
 echo "************** Foreman Tablesizes **************"
 echo ""
 echo $TABLEQUERY | su - postgres -c "psql -d foreman"
 
+echo ""
+echo "************** Pulpcore Tablesizes **************"
+echo ""
+echo $TABLEQUERY | su - postgres -c "psql -d pulpcore"
 
 echo ""
 echo "*************** FileSystem Usage ***************"
