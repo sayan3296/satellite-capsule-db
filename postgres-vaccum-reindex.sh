@@ -27,18 +27,21 @@ then
 
      if [[ $STAT != 'active' ]]
      then
-     echo -e "\nCheck and fix the postgres service.\n"
-     exit 1;
+       echo -e "\nCheck and fix the postgres service.\n"
+       exit 1;
      else
-     for i in foreman candlepin pulpcore
-     do
-       echo -e "\n--> Vaccuming $i database................ \n"
-       su - postgres -c "psql -d $i -c 'vacuum full verbose analyze;'"
-       sleep 4
-       echo -e "\n--> Re-indexing $i database.............. \n"
-       su - postgres -c "psql -d $i -c 'reindex database $i;'"
-       sleep 4
-     done
+       echo -e "\n--> Vaccuming postgres database................ \n"
+       runuser -u postgres -- vacuumdb -afz
+       if [ $? -eq '0' ]
+       then
+         sleep 4
+         echo -e "\n--> Re-indexing postgres database.............. \n"
+         runuser -u postgres -- reindexdb -a
+         sleep 4
+       else
+	 echo -e "\nCheck and fix the error with vacuuming.\n"
+	 exit 1;
+       fi
      fi
 
   echo -e "\n--> Restarting all satellite services.......  \n"
