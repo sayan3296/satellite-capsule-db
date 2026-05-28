@@ -11,8 +11,9 @@ then
 elif [ $confirm == 'y' ] || [ $confirm == 'yes' ] || [ $confirm == 'Y' ] || [ $confirm == 'YES' ] || [ $confirm == 'Yes' ]
 then
   rpm -q satellite &>/dev/null && SAT='TRUE' || SAT='FALSE'
+  rpm -q satellite-capsule &>/dev/null && CAP='TRUE' || CAP='FALSE'
 
-  if [[ $SAT == 'TRUE' ]]
+  if [[ $SAT == 'TRUE' || $CAP == 'TRUE' ]]
   then
   echo -e "\n--> Stopping all Satellite services now....... \n"
   foreman-maintain service stop
@@ -50,11 +51,14 @@ then
 
   echo -e "\n--> Checking satellite health...............  \n"
   foreman-maintain service status -b
+  if [[ $SAT == 'TRUE' && $CAP == 'FALSE' ]]
+  then
   echo -e "\n\n"
   hammer ping
   echo " "
+  fi
 
-  fi  
+  fi
 
 else
   echo -e "\n Please provide a valid input i.e. either yes or no. \n"
